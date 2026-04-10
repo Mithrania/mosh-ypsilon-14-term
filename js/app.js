@@ -1,3 +1,4 @@
+
 import { navGuard, navGuardAdmin } from './navlock.js';
 import context from './ctx.js';
 import {
@@ -85,26 +86,19 @@ const menuStatus = async function () {
     await navGuard(async () => {
         const menu = getEmptyMenu()
         await createTypeWriterText(menu, "SYSTEM CHECK...", { style: `font-size: 90%` })
-
         await createTypeWriterText(menu, "WARNING: AIR FILTERS REPLACED 455 DAYS AGO", { style: `color: yellow; font-size: 90%` })
-
         await createTypeWriterText(menu, "WARNING: SHOWER #5 OUT OF SERVICE FOR 1 DAY", { style: `color: red; font-size: 90%` })
-
         await createTypeWriterText(menu, "WARNING: MINING ELEVATOR LAST MAINTENANCE 455 DAYS AGO", { style: `color: yellow; font-size: 90%` })
-
         await createTypeWriterText(menu, "WARNING: AIRFLOW AT 82% (NOT OPTIMAL: REPLACE FILTERS AND CHECK DUCT BLOCKAGES)", { style: `color: red; font-size: 90%` })
-
         if (!isLifeSupportOff() && !isSelfDestructActivated()) {
             await createTypeWriterText(menu, "[ALL SYSTEMS OPERATING UNDER ACCEPTABLE CONDITIONS]", { style: `font-size: 90%` })
         } else {
             if (isLifeSupportOff())
                 await createTypeWriterText(menu, "WARNING: LIFE SUPPORT DISABLED!", { style: `color: red; font-size: 90%` })
-
             if (isSelfDestructActivated())
                 await createTypeWriterText(menu, "WARNING: SELF-DESTRUCT SEQUENCE ACTIVATED!", { style: `color: red; font-size: 90%` })
         }
-
-        await createTypeWriterMenu(menu, "< BACK", menuDiagnostics)
+        await createTypeWriterMenu(menu, "< INDIETRO", menuDiagnostics)
     })
 }
 
@@ -152,6 +146,7 @@ const menuShowers = async function () {
 }
 
 // HOME -> CONTROLS -> SYSTEM [A]
+// This menu requires admin permissions
 const menuSystem = async function () {
     await navGuardAdmin(async () => {
         const menu = getEmptyMenu()
@@ -182,7 +177,6 @@ const menuDisableLifeSupport = async function () {
                 menu,
                 `[WARNING, DISABLING LIFE SUPPORT WITHOUT AUTHORIZATION VIOLATES SAFETY POLICIES. ENSURE FORM 077-X24 IS COMPLETED AND SUBMITTED TO THE SUPERVISOR.]`,
                 { style: `color: red` })
-
             await createTypeWriterMenu(menu, "- CONFIRM", () => { context.life_support = false; menuLifeSupport() })
             await createTypeWriterMenu(menu, "< BACK", menuControls)
         } else {
@@ -200,19 +194,17 @@ const menuSelfDestruct = async function () {
             await createTypeWriterText(menu,
                 `[SELF-DESTRUCT SEQUENCE ACTIVATED. THE STATION WILL DETONATE IN 10 MINUTES. EVACUATE IMMEDIATELY.]`,
                 { style: `color: red` })
-
-            await createTypeWriterMenu(menu, `CONFIRM [${getConfirmationStr(context.self_destruct_confirm[0])}]`, () => toggleSelfDestructConfirm(0))
-            await createTypeWriterMenu(menu, `CONFIRM [${getConfirmationStr(context.self_destruct_confirm[1])}]`, () => toggleSelfDestructConfirm(1))
-            await createTypeWriterMenu(menu, `CONFIRM [${getConfirmationStr(context.self_destruct_confirm[2])}]`, () => toggleSelfDestructConfirm(2))
+            await createTypeWriterMenu(menu, `CONFIRM  [${getConfirmationStr(context.self_destruct_confirm[0])}]`, () => toggleSelfDestructConfirm(0))
+            await createTypeWriterMenu(menu, `CONFIRM  [${getConfirmationStr(context.self_destruct_confirm[1])}]`, () => toggleSelfDestructConfirm(1))
+            await createTypeWriterMenu(menu, `CONFIRM  [${getConfirmationStr(context.self_destruct_confirm[2])}]`, () => toggleSelfDestructConfirm(2))
             await createTypeWriterMenu(menu, "< BACK", menuControls)
         } else {
             await createTypeWriterText(menu,
                 `[WARNING, THE SELF-DESTRUCT PROCESS WILL DETONATE THE STATION 10 MINUTES AFTER ACTIVATION. ONCE CONFIRMED, IT WILL BECOME IRREVERSIBLE AFTER 5 MINUTES.]`,
                 { style: `color: red` })
-
-            await createTypeWriterMenu(menu, `CONFIRM [${getConfirmationStr(context.self_destruct_confirm[0])}]`, () => toggleSelfDestructConfirm(0))
-            await createTypeWriterMenu(menu, `CONFIRM [${getConfirmationStr(context.self_destruct_confirm[1])}]`, () => toggleSelfDestructConfirm(1))
-            await createTypeWriterMenu(menu, `CONFIRM [${getConfirmationStr(context.self_destruct_confirm[2])}]`, () => toggleSelfDestructConfirm(2))
+            await createTypeWriterMenu(menu, `CONFIRM  [${getConfirmationStr(context.self_destruct_confirm[0])}]`, () => toggleSelfDestructConfirm(0))
+            await createTypeWriterMenu(menu, `CONFIRM  [${getConfirmationStr(context.self_destruct_confirm[1])}]`, () => toggleSelfDestructConfirm(1))
+            await createTypeWriterMenu(menu, `CONFIRM  [${getConfirmationStr(context.self_destruct_confirm[2])}]`, () => toggleSelfDestructConfirm(2))
             await createTypeWriterMenu(menu, "< BACK", menuControls)
         }
     })
@@ -245,14 +237,12 @@ const menuContact = async function (ship, success) {
         await createTypeWriterText(menu, `SENDING CONTACT SIGNAL TO ${ship}...`)
         await createTypeWriterText(menu, `...`, { speed: 500 })
         await createTypeWriterText(menu, `...`, { speed: 500 })
-
         if (success) {
             await createTypeWriterText(menu, `CHANNEL OPEN`, { style: `color: green` })
         } else {
             playSfx("errorsfx")
             await createTypeWriterText(menu, `CONTACT FAILED`, { style: `color: red` })
         }
-
         await createTypeWriterMenu(menu, "< BACK", menuHome)
     })
 }
@@ -276,6 +266,7 @@ const toggleMineshaft = function (flag) {
 
 const toggleShower = function (index) {
     if (index === 4) {
+        // this shower doesn't work
         showError("[SHOWER 5 OUT OF SERVICE.]")
     } else {
         context.showers[index] = !context.showers[index]
@@ -294,7 +285,7 @@ const toggleAdmin = function () {
         admin_el.innerHTML = 'GUEST'
     }
 
-    navigator.vibrate(200);
+    navigator.vibrate(200); // vibrate for 200ms
 }
 
 const toggleSelfDestructConfirm = function (index) {
@@ -303,10 +294,11 @@ const toggleSelfDestructConfirm = function (index) {
     if (isSelfDestructActivated()) {
         navigator.vibrate([
             100, 30, 100, 30, 100, 30, 200, 30, 200, 30, 200, 30, 100, 30, 100, 30, 100,
-        ]);
+        ]); // Vibrate 'SOS' in Morse.        
     } else {
-        navigator.vibrate(200);
+        navigator.vibrate(200); // vibrate for 200ms
     }
 
     menuSelfDestruct()
 }
+//
