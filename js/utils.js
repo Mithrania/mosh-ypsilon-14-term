@@ -27,7 +27,7 @@ const stopSfx = function (name) {
 }
 
 const getAirlockStatus = function (flag) {
-    return flag ? "BLOCCATO" : "SBLOCCATO"
+    return flag ? "LOCKED" : "UNLOCKED"
 }
 
 const getOnOffStatus = function (flag) {
