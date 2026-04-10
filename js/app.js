@@ -98,7 +98,7 @@ const menuStatus = async function () {
             if (isSelfDestructActivated())
                 await createTypeWriterText(menu, "WARNING: SELF-DESTRUCT SEQUENCE ACTIVATED!", { style: `color: red; font-size: 90%` })
         }
-        await createTypeWriterMenu(menu, "< INDIETRO", menuDiagnostics)
+        await createTypeWriterMenu(menu, "< BACK", menuDiagnostics)
     })
 }
 
