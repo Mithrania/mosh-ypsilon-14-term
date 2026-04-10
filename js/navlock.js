@@ -25,7 +25,7 @@ async function navGuardAdmin(func) {
     if (nav_enabled === false)
         return
     if (context.is_admin === false) {
-        showError("[ACCESSO VIETATO, RICHIESTO BADGE AMMINISTRATORE]")
+        showError("[ACCESS PROHIBITED, ADMINISTRATOR'S KEYCARD REQUIRED]")
         return
     }
     await doNav(func)
